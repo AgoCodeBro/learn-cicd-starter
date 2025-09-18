@@ -1,24 +1,24 @@
 package auth
 
 import (
-	"testing"
 	"net/http"
+	"testing"
 )
 
 func TestGetAPIKey(t *testing.T) {
 	contentTypeHeader := http.Header{}
 	contentTypeHeader.Add("Content-Type", "image/png")
-	tests := []struct{
-		name string
-		input http.Header
+	tests := []struct {
+		name           string
+		input          http.Header
 		expectedOutput string
-		expectedError error
+		expectedError  error
 	}{
 		{
-			name: "Empty header",
-			input: http.Header{},
+			name:           "Empty header",
+			input:          http.Header{},
 			expectedOutput: "",
-			expectedError: ErrNoAuthHeaderIncluded,
+			expectedError:  ErrNoAuthHeaderIncluded,
 		},
 		{
 			name: "Header with no Auth Header",
@@ -26,7 +26,7 @@ func TestGetAPIKey(t *testing.T) {
 				"Content-Type": []string{"image/png"},
 			},
 			expectedOutput: "",
-			expectedError: ErrNoAuthHeaderIncluded,
+			expectedError:  ErrNoAuthHeaderIncluded,
 		},
 		{
 			name: "Header with only Auth Header and malformed key",
@@ -34,27 +34,27 @@ func TestGetAPIKey(t *testing.T) {
 				"Authorization": []string{"Bearer abcde"},
 			},
 			expectedOutput: "",
-			expectedError: ErrMalFormedKey,
+			expectedError:  ErrMalFormedKey,
 		},
 		{
 			name: "Header with many headers and malformed key",
 			input: http.Header{
 				"Authorization": []string{"Bearer abcde"},
-				"Content-Type": []string{"video/mp4"},
-				"User-Agent": []string{"testing"},
+				"Content-Type":  []string{"video/mp4"},
+				"User-Agent":    []string{"testing"},
 			},
 			expectedOutput: "",
-			expectedError: ErrMalFormedKey,
+			expectedError:  ErrMalFormedKey,
 		},
 		{
 			name: "Header with many headers",
 			input: http.Header{
 				"Authorization": []string{"ApiKey ABC"},
-				"Content-Type": []string{"video/mp4"},
-				"User-Agent": []string{"testing"},
+				"Content-Type":  []string{"video/mp4"},
+				"User-Agent":    []string{"testing"},
 			},
 			expectedOutput: "ABC",
-			expectedError: nil,
+			expectedError:  nil,
 		},
 		{
 			name: "Header with only auth header",
@@ -62,9 +62,8 @@ func TestGetAPIKey(t *testing.T) {
 				"Authorization": []string{"ApiKey ABC"},
 			},
 			expectedOutput: "ABC",
-			expectedError: nil,
+			expectedError:  nil,
 		},
-		
 	}
 
 	for _, test := range tests {
